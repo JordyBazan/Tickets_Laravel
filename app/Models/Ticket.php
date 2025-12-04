@@ -14,24 +14,34 @@ class Ticket extends Model
      * Los atributos que son asignables masivamente.
      */
     protected $fillable = [
+        // Datos del solicitante
         'unit_service',
         'applicant_name',
         'applicant_email',
         'applicant_rut',
         'applicant_annex',
+        
+        // Datos del problema
         'problem_type_id',
         'initial_priority_id',
-        'assigned_priority_id',
         'description',
-        'status_id',
-        'assigned_to_user_id',
-        'assignment_type_id',
+        
+        // --- 👇 ESTOS SON LOS QUE NO SE ESTÁN GUARDANDO 👇 ---
+        'status_id',             // 👈 Importante
+        'assigned_priority_id',  // 👈 Importante
+        'assignment_type_id',    // 👈 Importante (Taller)
+        'assigned_to_user_id',   // 👈 Importante (Técnico)
+        // -----------------------------------------------------
+
+        // Datos de ejecución
         'execution_details',
         'time_spent_hours',
+        
+        // Sistema
         'reception_approved',
         'reception_comments',
         'secure_token',
-        'ticket_number', // Aunque es automático, a veces es útil tenerlo aquí
+        'ticket_number',
         'closed_at',
     ];
 

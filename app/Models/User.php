@@ -25,6 +25,7 @@ class User extends Authenticatable
         'document_number',  // Nuevo campo
         'document_type_id', // Nuevo campo
         'status',           // Nuevo campo
+        'ticket_assignment_id',
     ];
 
     /**
@@ -58,4 +59,43 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
+
+    // Relación: Un usuario pertenece a un Taller
+    public function taller()
+    {
+        return $this->belongsTo(TicketAssignment::class, 'ticket_assignment_id');
+    }
+
+    public function hasAnyRole(array $roles)
+    {
+        return $this->roles()->whereIn('title', $roles)->exists();
+    }
+
+
+    // 1. Relación Directa con Permisos (NUEVA)
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'permission_user');
+    }
+
+    
+    // 3. LÓGICA MAESTRA DE VERIFICACIÓN
+    public function hasPermission(string $permissionName)
+    {
+        // A. Si es Admin, pase libre
+        if ($this->roles()->where('title', 'Administrador')->exists()) {
+            return true;
+        }
+
+        // B. ¿Tiene el permiso DIRECTAMENTE asignado al usuario?
+        if ($this->permissions()->where('title', $permissionName)->exists()) {
+            return true;
+        }
+
+        // C. ¿Tiene el permiso a través de su ROL?
+        return $this->roles()->whereHas('permissions', function ($query) use ($permissionName) {
+            $query->where('title', $permissionName);
+        })->exists();
+    }
+    
 }

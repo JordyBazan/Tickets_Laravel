@@ -7,6 +7,25 @@ use App\Models\TicketProblemType;
 use App\Models\TicketPriority;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; // Usamos DB para acceder a la tabla sidra directamente
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewTicketNotification;
+use App\Models\User;
+
+
+    // 4. ENVIAR CORREO AL JEFE
+        // Buscamos usuarios con rol 'Jefe RRFF' (o Admin si prefieres)
+        $jefes = User::whereHas('roles', function($q) {
+            $q->whereIn('title', ['Jefe de Recursos Físicos', 'Administrador']);
+        })->get();
+
+        foreach ($jefes as $jefe) {
+            // Usamos try-catch para que si falla el correo NO falle la solicitud del usuario
+            try {
+                Mail::to($jefe->email)->send(new NewTicketNotification($ticket));
+            } catch (\Exception $e) {
+                // Log::error("Error enviando correo al jefe: " . $e->getMessage());
+            }
+        }
 
 class PublicTicketController extends Controller
 {
@@ -47,6 +66,21 @@ class PublicTicketController extends Controller
         // 2. Crear el Ticket
         // Nota: Laravel llenará status_id, ticket_number y secure_token automáticamente gracias al Modelo.
         $ticket = Ticket::create($request->except('photo'));
+
+        // 4. ENVIAR CORREO AL JEFE
+        // Buscamos usuarios con rol 'Jefe RRFF' (o Admin si prefieres)
+        $jefes = User::whereHas('roles', function($q) {
+            $q->whereIn('title', ['Jefe de Recursos Físicos', 'Administrador']);
+        })->get();
+
+        foreach ($jefes as $jefe) {
+            // Usamos try-catch para que si falla el correo NO falle la solicitud del usuario
+            try {
+                Mail::to($jefe->email)->send(new NewTicketNotification($ticket));
+            } catch (\Exception $e) {
+                // Log::error("Error enviando correo al jefe: " . $e->getMessage());
+            }
+        }
 
         // 3. Manejo de la Foto (Si el usuario subió una)
         if ($request->hasFile('photo')) {

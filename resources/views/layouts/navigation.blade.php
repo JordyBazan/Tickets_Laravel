@@ -30,60 +30,103 @@
       </a>
 
       <div class="px-3 py-3 mb-6 bg-gray-800 rounded-lg border border-gray-700 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm font-bold">
+          <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm font-bold flex-shrink-0">
               {{ substr(Auth::user()->first_name, 0, 1) }}
           </div>
           <div class="flex flex-col overflow-hidden">
               <span class="text-sm font-medium text-white truncate">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
-              <span class="text-xs text-gray-400 truncate">Administrador</span>
+              
+              <span class="text-[10px] text-blue-300 uppercase tracking-wider font-bold">
+                  {{ Auth::user()->roles->first()?->title ?? 'Usuario' }}
+              </span>
+
+              @if(Auth::user()->taller)
+                  <span class="text-[10px] text-gray-400 flex items-center mt-0.5">
+                      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                      {{ Str::limit(Auth::user()->taller->name, 18) }}
+                  </span>
+              @endif
           </div>
       </div>
 
       <ul class="space-y-2 font-medium">
          
-         <li>
-            <a href="{{ route('rrff.tickets.index') }}" 
-               class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.tickets.index') ? 'bg-blue-700 shadow-md' : '' }}">
-               
-               <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.tickets.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-               
-               <span class="ms-3">Bandeja de Tickets</span>
-               
-               @php $openCount = \App\Models\Ticket::where('status_id', 1)->count(); @endphp
-               @if($openCount > 0)
-                   <span class="inline-flex items-center justify-center w-5 h-5 ms-3 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                       {{ $openCount }}
-                   </span>
-               @endif
-            </a>
-         </li>
+         {{-- ========================================================= --}}
+         {{-- MENÚ PARA JEFATURAS Y ADMIN (Gestión Global)              --}}
+         {{-- ========================================================= --}}
+        @if(Auth::user()->hasAnyRole(['Administrador', 'Jefe RRFF']))
+             
+             <li class="px-3 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                 Gestión
+            </li>
 
-         <li>
-            <a href="{{ route('rrff.settings.index') }}" 
-               class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.settings.index') ? 'bg-blue-700 shadow-md' : '' }}">
-               
-               <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.settings.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-               
-               <span class="ms-3">Configuración</span>
-            </a>
-         </li>
+            <li>
+               <a href="{{ route('dashboard') }}"
+                  class="flex items-center p-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white group transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-md' : '' }}">
+                  
+                  <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                  <span class="ms-3">Dashboard Principal</span>
+               </a>
+            </li>
 
-         <li>
-            <a href="{{ route('rrff.users.index') }}" 
-                class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.users.*') ? 'bg-blue-700 shadow-md' : '' }}">
-                
-                <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.users.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                </svg>
-                
-                <span class="ms-3">Usuarios</span>
-            </a>
-        </li>
+             <li>
+                <a href="{{ route('rrff.tickets.index') }}" class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.tickets.index') ? 'bg-blue-700 shadow-md' : '' }}">
+                   <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.tickets.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                   <span class="ms-3">Bandeja de Tickets</span>
+                   
+                   @php $openCount = \App\Models\Ticket::where('status_id', 1)->count(); @endphp
+                   @if($openCount > 0)
+                       <span class="inline-flex items-center justify-center w-5 h-5 ms-3 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
+                           {{ $openCount }}
+                       </span>
+                   @endif
+                </a>
+             </li>
+
+             <li>
+               <a href="{{ route('rrff.users.index') }}" class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.users.*') ? 'bg-blue-700 shadow-md' : '' }}">
+                  <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.users.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                   </svg>
+                  <span class="ms-3">Usuarios</span>
+               </a>
+            </li>
+
+             <li>
+                <a href="{{ route('rrff.settings.index') }}" class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('rrff.settings.index') ? 'bg-blue-700 shadow-md' : '' }}">
+                   <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('rrff.settings.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                   <span class="ms-3">Configuración</span>
+                </a>
+             </li>
+         @endif
+
+         {{-- ========================================================= --}}
+         {{-- MENÚ PARA TÉCNICOS (Operativo)                            --}}
+         {{-- ========================================================= --}}
+         @if(Auth::user()->hasAnyRole(['Técnico', 'Super Admin'])) @if(Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'Jefe RRFF']))
+                <hr class="my-4 border-gray-700">
+             @endif
+
+             <li class="px-3 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                 Operativo
+             </li>
+
+             <li>
+               <a href="{{ route('technician.index') }}" class="flex items-center p-3 text-white rounded-lg hover:bg-gray-800 group transition-colors duration-200 {{ request()->routeIs('technician.*') ? 'bg-green-700 shadow-md' : '' }}">
+                  <svg class="w-5 h-5 transition duration-75 {{ request()->routeIs('technician.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span class="ms-3">Mis Tareas</span>
+               </a>
+            </li>
+         @endif
 
          <div class="my-4 border-t border-gray-700"></div>
 
@@ -91,11 +134,9 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="flex w-full items-center p-3 text-white rounded-lg hover:bg-red-900 group transition-colors duration-200">
-                   
                    <svg class="flex-shrink-0 w-5 h-5 text-gray-400 transition duration-75 group-hover:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                     </svg>
-                   
                    <span class="ms-3 whitespace-nowrap">Cerrar Sesión</span>
                 </button>
             </form>

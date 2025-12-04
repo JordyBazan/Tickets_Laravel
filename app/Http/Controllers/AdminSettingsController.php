@@ -4,77 +4,78 @@ namespace App\Http\Controllers;
 
 use App\Models\TicketProblemType;
 use App\Models\TicketPriority;
+use App\Models\TicketAssignment;
+use App\Models\Supply; // <--- 1. IMPORTANTE: Que esta línea esté aquí
 use Illuminate\Http\Request;
 
 class AdminSettingsController extends Controller
 {
     /**
-     * Muestra la lista de Tipos y Prioridades
+     * Muestra la lista de configuraciones
      */
     public function index()
     {
+        // Cargar listas
         $problemTypes = TicketProblemType::all();
         $priorities = TicketPriority::orderBy('level', 'asc')->get();
+        $assignments = TicketAssignment::all();
         
-        // AGREGAR ESTA LÍNEA:
-        $assignments = \App\Models\TicketAssignment::all(); 
+        // 2. Cargar Insumos (Variable $supplies)
+        $supplies = Supply::orderBy('name')->get(); 
 
-        return view('rrff.settings.configuracion', compact('problemTypes', 'priorities', 'assignments'));
+        // 3. Enviar TODO a la vista
+        return view('rrff.settings.configuracion', compact(
+            'problemTypes', 
+            'priorities', 
+            'assignments', 
+            'supplies' // <--- TIENE QUE ESTAR AQUÍ
+        ));
     }
 
-    /**
-     * Guarda un nuevo Tipo de Problema
-     */
+    // --- FUNCIONES DE GUARDADO ---
+
     public function storeProblemType(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100|unique:ticket_problem_types,name'
-        ]);
-
-        TicketProblemType::create([
-            'name' => $request->name
-        ]);
-
-        return redirect()->route('rrff.settings.index')->with('success', 'Nuevo tipo de problema agregado.');
+        $request->validate(['name' => 'required|string|max:100|unique:ticket_problem_types,name']);
+        TicketProblemType::create(['name' => $request->name]);
+        return back()->with('success', 'Tipo agregado.');
     }
 
-    /**
-     * Elimina un Tipo de Problema
-     */
     public function destroyProblemType($id)
     {
-        $type = TicketProblemType::findOrFail($id);
-        $type->delete();
-
-        return redirect()->route('rrff.settings.index')->with('success', 'Tipo de problema eliminado.');
+        TicketProblemType::findOrFail($id)->delete();
+        return back()->with('success', 'Tipo eliminado.');
     }
 
-    /**
-     * Guardar nuevo Taller/Asignación
-     */
     public function storeAssignment(Request $request)
     {
         $request->validate(['name' => 'required|string|max:100']);
-        
-        \App\Models\TicketAssignment::create([
-            'name' => $request->name,
-            'is_internal' => 1 // Por defecto lo creamos como interno
-        ]);
-
-        return redirect()->route('rrff.settings.index')->with('success', 'Taller agregado correctamente.');
+        TicketAssignment::create(['name' => $request->name, 'is_internal' => 1]);
+        return back()->with('success', 'Taller agregado.');
     }
 
-    /**
-     * Eliminar Taller
-     */
     public function destroyAssignment($id)
     {
         try {
-            $assignment = \App\Models\TicketAssignment::findOrFail($id);
-            $assignment->delete();
-            return redirect()->route('rrff.settings.index')->with('success', 'Taller eliminado.');
+            TicketAssignment::findOrFail($id)->delete();
+            return back()->with('success', 'Taller eliminado.');
         } catch (\Exception $e) {
-            return redirect()->route('rrff.settings.index')->with('error', 'No se puede eliminar: Hay tickets asignados a este taller.');
+            return back()->with('error', 'No se puede borrar este taller.');
         }
+    }
+
+    // --- FUNCIONES DE INSUMOS ---
+
+    public function storeSupply(Request $request)
+    {
+        $request->validate(['name' => 'required|string']);
+        Supply::create($request->all());
+        return back()->with('success', 'Insumo agregado.');
+    }
+
+    public function destroySupply($id)
+    {
+        Supply::findOrFail($id)->delete();
+        return back()->with('success', 'Insumo eliminado.');
     }
 }
