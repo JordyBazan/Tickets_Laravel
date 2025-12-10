@@ -134,7 +134,7 @@ class Ticket extends Model
     /**
      * Tipo de asignación (Taller Interno o Empresa Externa)
      */
-    public function assignmentType()
+    public function assignment()
     {
         return $this->belongsTo(TicketAssignment::class, 'assignment_type_id');
     }

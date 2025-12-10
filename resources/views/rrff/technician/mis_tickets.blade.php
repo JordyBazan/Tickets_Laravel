@@ -4,7 +4,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">
-                    👷 Mis Tareas Asignadas
+                    Mis Tareas Asignadas
                 </h1>
                 <p class="text-sm text-gray-500 mt-1">
                     Gestiona y reporta el avance de tus órdenes de trabajo pendientes.
@@ -95,7 +95,7 @@
                         <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-900">¡Todo al día!</h3>
-                    <p class="text-gray-500 mt-1 max-w-sm">No tienes órdenes de trabajo pendientes por ahora. Disfruta tu café ☕.</p>
+                    <p class="text-gray-500 mt-1 max-w-sm">No tienes órdenes de trabajo pendientes por ahora. Disfruta tu café.</p>
                 </div>
             @endforelse
         </div>

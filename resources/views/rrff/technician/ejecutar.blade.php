@@ -99,7 +99,7 @@
                         <span class="bg-blue-600 text-white p-1.5 rounded-lg mr-3 shadow-sm">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                         </span>
-                        Registrar Avance
+                        Registrar Término de Trabajo
                     </h2>
                 </div>
 
@@ -169,28 +169,23 @@
                         </div>
 
                         <div class="mb-8">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Observación Técnica</label>
-                            <textarea name="new_observation" rows="3" class="w-full border-gray-300 rounded-xl text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 placeholder-gray-400 py-3 px-4 transition-shadow focus:shadow-md" placeholder="Describe brevemente el trabajo realizado hoy..."></textarea>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Observación Técnica Final</label>
+                            <textarea name="new_observation" rows="3" class="w-full border-gray-300 rounded-xl text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 placeholder-gray-400 py-3 px-4 transition-shadow focus:shadow-md" placeholder="Describe brevemente el trabajo realizado para finalizar..."></textarea>
                         </div>
 
                         <hr class="mb-6 border-gray-100">
 
                         <div class="space-y-4">
-                            <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl flex justify-center items-center gap-3 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                                Guardar Avance
-                            </button>
+                            <input type="hidden" name="job_done" value="1">
 
-                            <label class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl cursor-pointer hover:bg-green-100 transition-colors group">
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="job_done" id="job_done" class="w-5 h-5 text-green-600 rounded border-gray-300 focus:ring-green-500 cursor-pointer">
-                                    <div class="ml-3 flex flex-col">
-                                        <span class="text-sm font-bold text-green-900 group-hover:text-green-900">Marcar como TERMINADO</span>
-                                        <span class="text-xs text-green-700">El ticket se cerrará.</span>
-                                    </div>
-                                </div>
-                                <span class="bg-white text-green-700 text-xs font-bold px-2 py-1 rounded border border-green-200 shadow-sm">FINALIZAR</span>
-                            </label>
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-3 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Finalizar y Cerrar Ticket
+                            </button>
+                            
+                            <p class="text-center text-xs text-gray-400 mt-2">
+                                Al hacer clic, el ticket se marcará como terminado y se notificará.
+                            </p>
                         </div>
 
                     </form>

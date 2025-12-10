@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\TicketAssignment;
-use App\Models\Permission; // <--- ESTO FALTABA IMPORTAR
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller;
@@ -13,31 +13,37 @@ use Illuminate\Routing\Controller;
 class AdminUserController extends Controller
 {
     /**
-     * SEGURIDAD
+     * SEGURIDAD BASE: Usamos el permiso de VISTA (user_index) en el constructor.
      */
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
             $user = $request->user();
 
-            if (!$user || !$user->hasAnyRole(['Administrador', 'Jefe de Recursos Físicos'])) {
-                abort(403, 'ACCESO DENEGADO: No tienes permisos.');
+            // AHORA CHEQUEAMOS EL PERMISO GRANULAR 'user_index' (Ver la lista)
+            if (!$user || !$user->hasPermission('user_index')) {
+                abort(403, 'ACCESO DENEGADO: No tienes permisos para ver usuarios.');
             }
 
             return $next($request);
         });
     }
 
-    // 1. LISTAR
+    // 1. LISTAR (Base check is in constructor)
     public function index()
     {
         $users = User::orderBy('created_at', 'desc')->paginate(10);
         return view('rrff.users.lista_usuarios', compact('users'));
     }
 
-    // 2. CREAR
+    // 2. CREAR (Formulario)
     public function create()
     {
+        // Chequeo de acción específica: Crear/Editar
+        if (!auth()->user()->hasPermission('user_create_edit')) {
+            abort(403, 'ACCESO DENEGADO: No tienes permiso para crear usuarios.');
+        }
+
         $roles = Role::where('status', 1)->get();
         $talleres = TicketAssignment::where('is_internal', 1)->get(); 
         return view('rrff.users.crear_usuario', compact('roles', 'talleres'));
@@ -46,6 +52,11 @@ class AdminUserController extends Controller
     // 3. GUARDAR
     public function store(Request $request)
     {
+        // Chequeo de acción específica: Crear/Editar
+        if (!auth()->user()->hasPermission('user_create_edit')) {
+            abort(403, 'ACCESO DENEGADO: No tienes permiso para crear usuarios.');
+        }
+
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
@@ -72,14 +83,17 @@ class AdminUserController extends Controller
         return redirect()->route('rrff.users.index')->with('success', 'Usuario creado.');
     }
 
-    // 4. EDITAR (Aquí estaba el error)
+    // 4. EDITAR (Formulario)
     public function edit($id)
     {
+        // Chequeo de acción específica: Crear/Editar
+        if (!auth()->user()->hasPermission('user_create_edit')) {
+            abort(403, 'ACCESO DENEGADO: No tienes permiso para editar usuarios.');
+        }
+        
         $user = User::findOrFail($id);
         $roles = Role::where('status', 1)->get();
         $talleres = TicketAssignment::where('is_internal', 1)->get();
-        
-        // 👇 ESTO ES LO QUE FALTABA: Cargar los permisos para la vista
         $permissions = Permission::all()->groupBy('menu');
 
         return view('rrff.users.editar_usuario', compact('user', 'roles', 'talleres', 'permissions'));
@@ -88,8 +102,13 @@ class AdminUserController extends Controller
     // 5. ACTUALIZAR
     public function update(Request $request, $id)
     {
+        // Chequeo de acción específica: Crear/Editar
+        if (!auth()->user()->hasPermission('user_create_edit')) {
+            abort(403, 'ACCESO DENEGADO: No tienes permiso para editar usuarios.');
+        }
+        
         $user = User::findOrFail($id);
-
+        
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
@@ -112,18 +131,20 @@ class AdminUserController extends Controller
             $user->update(['password' => Hash::make($request->password)]);
         }
 
-        // Sincronizar Rol
         $user->roles()->sync([$request->role_id]);
-
-        // 👇 ESTO TAMBIÉN FALTABA: Guardar los permisos directos marcados
         $user->permissions()->sync($request->input('direct_permissions', []));
 
         return redirect()->route('rrff.users.index')->with('success', 'Usuario actualizado.');
     }
     
-    // 6. ELIMINAR
+    // 6. ELIMINAR (Imagen fda6e1.png)
     public function destroy($id)
     {
+        // Chequeo de acción específica: Eliminar
+        if (!auth()->user()->hasPermission('user_delete')) {
+            abort(403, 'ACCESO DENEGADO: No tienes permiso para eliminar usuarios.');
+        }
+
         if (auth()->user()->id == $id) {
             return back()->with('error', 'No puedes eliminar tu propia cuenta.');
         }
