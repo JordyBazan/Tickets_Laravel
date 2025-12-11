@@ -87,7 +87,82 @@
                         @endif
                     </div>
                 </div>
+                            @if($ticket->status_id == 3 || $ticket->status_id == 2) <div class="mt-8 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        
+                                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            Informe Técnico
+                                        </h3>
+                                        @if($ticket->status_id == 3)
+                                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-bold border border-green-200">Trabajo Finalizado</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        
+                                        <div class="space-y-6">
+                                            <div>
+                                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Técnico Responsable</span>
+                                                <div class="flex items-center">
+                                                    <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold mr-3">
+                                                        {{ substr($ticket->technician->name ?? '?', 0, 1) }}
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">{{ $ticket->technician->name ?? 'Sin asignar' }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Bitácora / Observaciones</span>
+                                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed h-auto max-h-48 overflow-y-auto">
+                                                    {{ $ticket->execution_details ?? 'Sin detalles registrados.' }}
+                                                </div>
+                                            </div>
+
+                                            <div class="flex items-center justify-between bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                                <span class="text-sm font-bold text-blue-900">Total Horas Invertidas</span>
+                                                <span class="text-2xl font-extrabold text-blue-600">{{ number_format($ticket->time_spent_hours ?? 0, 1) }} <span class="text-sm font-normal text-blue-400">hrs</span></span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">Insumos y Materiales Utilizados</span>
+                                            
+                                            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                                @if($ticket->materials->count() > 0)
+                                                    <table class="min-w-full divide-y divide-gray-200">
+                                                        <thead class="bg-gray-50">
+                                                            <tr>
+                                                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
+                                                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Cant.</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="divide-y divide-gray-200">
+                                                            @foreach($ticket->materials as $mat)
+                                                                <tr>
+                                                                    <td class="px-4 py-2 text-sm text-gray-700">{{ $mat->material_name }}</td>
+                                                                    <td class="px-4 py-2 text-sm text-gray-900 font-bold text-right">{{ $mat->quantity }} {{ $mat->unit }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <div class="p-8 text-center">
+                                                        <svg class="mx-auto h-8 w-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                                                        <p class="mt-2 text-sm text-gray-400">No se registraron insumos.</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            @endif
             </div>
+
+
+
+
 
             <div class="lg:col-span-1">
                 

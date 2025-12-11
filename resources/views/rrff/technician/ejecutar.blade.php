@@ -15,143 +15,67 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="space-y-6">
-                
+            <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-yellow-400"></div>
-                    
                     <div class="pl-3">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Solicitud Original</h3>
-                        <p class="text-gray-900 font-medium text-lg mb-6 leading-relaxed">
-                            "{{ $ticket->description }}"
-                        </p>
+                        <p class="text-gray-900 font-medium text-lg mb-6 leading-relaxed">"{{ $ticket->description }}"</p>
                         
-                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 space-y-3">
-                            <div class="flex items-center text-sm text-gray-700">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3 flex-shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                </div>
-                                <div>
-                                    <span class="block text-xs text-gray-500 font-bold uppercase">Ubicación</span>
-                                    {{ $ticket->unit_service }}
-                                </div>
-                            </div>
-
-                            <div class="flex items-center text-sm text-gray-700">
-                                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-3 flex-shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                </div>
-                                <div>
-                                    <span class="block text-xs text-gray-500 font-bold uppercase">Solicitante</span>
-                                    {{ $ticket->applicant_name }}
-                                </div>
-                            </div>
-
-                            <div class="flex items-center text-sm text-gray-700">
-                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3 flex-shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                </div>
-                                <div>
-                                    <span class="block text-xs text-gray-500 font-bold uppercase">Contacto</span>
-                                    {{ $ticket->applicant_annex }} <span class="text-gray-400 mx-1">|</span> {{ $ticket->applicant_email }}
-                                </div>
-                            </div>
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 space-y-3 text-sm">
+                            <p><span class="font-bold text-gray-500 block text-xs uppercase">Ubicación</span> {{ $ticket->unit_service }}</p>
+                            <p><span class="font-bold text-gray-500 block text-xs uppercase">Solicitante</span> {{ $ticket->applicant_name }}</p>
+                            <p><span class="font-bold text-gray-500 block text-xs uppercase">Contacto</span> {{ $ticket->applicant_annex }} | {{ $ticket->applicant_email }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        Evidencia Fotográfica
-                    </h3>
-                    
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Evidencia Fotográfica</h3>
                     @if($ticket->images->count() > 0)
-                        <div class="relative group rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                        <div class="rounded-lg overflow-hidden border border-gray-200">
                             <a href="{{ asset('storage/' . $ticket->images->first()->url) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $ticket->images->first()->url) }}" 
-                                     alt="Foto del problema" 
-                                     class="w-full h-64 object-cover transform transition-transform duration-500 group-hover:scale-105">
-                                
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                                    <span class="text-white opacity-0 group-hover:opacity-100 font-bold text-sm bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
-                                        Clic para ampliar
-                                    </span>
-                                </div>
+                                <img src="{{ asset('storage/' . $ticket->images->first()->url) }}" class="w-full h-48 object-cover hover:opacity-90 transition">
                             </a>
                         </div>
                     @else
-                        <div class="h-48 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400">
-                            <svg class="w-10 h-10 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span class="text-sm font-medium">Sin evidencia adjunta</span>
-                        </div>
+                        <div class="h-32 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">Sin evidencia</div>
                     @endif
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg border border-blue-100 relative overflow-hidden h-fit">
-                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full opacity-50 blur-xl"></div>
-                
-                <div class="px-6 py-5 border-b border-gray-100 bg-white relative z-10">
-                    <h2 class="text-lg font-bold text-gray-900 flex items-center">
-                        <span class="bg-blue-600 text-white p-1.5 rounded-lg mr-3 shadow-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                        </span>
-                        Registrar Término de Trabajo
-                    </h2>
-                </div>
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg border border-indigo-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                        <h2 class="text-lg font-bold text-gray-900">Bitácora de Trabajo</h2>
+                    </div>
 
-                <div class="p-6 relative z-10">
-                    <form action="{{ route('technician.update', $ticket->id) }}" method="POST">
+                    <form action="{{ route('technician.update', $ticket->id) }}" method="POST" class="p-6">
                         @csrf
                         @method('PUT')
 
-                        <div class="mb-6 bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                        <div class="mb-6 bg-blue-50 p-4 rounded-xl border border-blue-100">
                             <div class="flex justify-between items-center mb-3">
-                                <label class="text-sm font-bold text-blue-900 flex items-center">
-                                    <svg class="w-4 h-4 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                                    Insumos Utilizados
-                                </label>
-                                <button type="button" onclick="agregarFilaMaterial()" class="text-xs bg-white border border-blue-200 hover:bg-blue-50 text-blue-700 font-medium px-3 py-1.5 rounded-lg transition-all shadow-sm flex items-center group">
-                                    <svg class="w-3 h-3 mr-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                    Agregar
-                                </button>
+                                <label class="text-sm font-bold text-blue-900">Insumos Utilizados</label>
+                                <button type="button" onclick="agregarFilaMaterial()" class="text-xs bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded hover:bg-blue-50 transition shadow-sm">+ Agregar</button>
                             </div>
 
-                            <div id="lista-materiales" class="space-y-2">
-                                <div class="grid grid-cols-12 gap-2 bg-white p-2 rounded-lg border border-blue-100 shadow-sm">
-                                    <div class="col-span-7">
-                                        <select name="materials[0][name]" class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 py-1.5" onchange="actualizarUnidad(this)">
-                                            <option value="">Seleccione insumo...</option>
-                                            @foreach($supplies as $supply)
-                                                <option value="{{ $supply->name }}" data-unit="{{ $supply->unit }}">{{ $supply->name }} ({{ $supply->unit }})</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-span-3">
-                                        <input type="number" name="materials[0][quantity]" step="0.1" placeholder="Cant." class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 text-center py-1.5">
-                                    </div>
-                                    <div class="col-span-2">
-                                        <input type="text" name="materials[0][unit]" placeholder="Un." class="unidad-input w-full border-gray-200 rounded-md text-xs bg-gray-100 text-gray-500 text-center cursor-not-allowed py-1.5" readonly tabindex="-1">
-                                    </div>
-                                </div>
-                            </div>
-                            
                             @if($ticket->materials->count() > 0)
-                                <div class="mt-4 pt-3 border-t border-blue-200/50">
-                                    <p class="text-[10px] font-bold text-blue-400 mb-2 uppercase tracking-wide">Registrados anteriormente:</p>
-                                    <ul class="text-xs text-blue-800 space-y-1 pl-1">
+                                <div class="mb-3 text-xs text-gray-600 bg-white p-2 rounded border border-blue-100">
+                                    <p class="font-bold mb-1 uppercase text-[10px] text-blue-400">Registrados:</p>
+                                    <ul class="space-y-1">
                                         @foreach($ticket->materials as $mat)
-                                            <li class="flex items-center">
-                                                <svg class="w-3 h-3 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                                <span class="font-bold mr-1">{{ $mat->quantity }} {{ $mat->unit }}</span> {{ $mat->material_name }}
-                                            </li>
+                                            <li class="flex items-center"><span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span> {{ $mat->material_name }} ({{ $mat->quantity }} {{ $mat->unit }})</li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
+
+                            <div id="lista-materiales" class="space-y-2">
+                                </div>
+                            <p class="text-xs text-gray-400 mt-2 ml-1">Selecciona el insumo y la cantidad usada.</p>
                         </div>
 
                         <div class="mb-6">
@@ -162,30 +86,30 @@
                                     <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-medium">hrs</span>
                                 </div>
                                 <div class="text-sm text-gray-600 flex flex-col border-l border-gray-200 pl-4">
-                                    <span class="text-xs text-gray-400 uppercase font-bold tracking-wider">Acumulado</span>
-                                    <span class="text-lg font-bold text-gray-900">{{ $ticket->time_spent_hours }} <span class="text-xs font-normal text-gray-500">hrs totales</span></span>
+                                    <span class="text-xs text-gray-400 uppercase font-bold tracking-wider">Acumulado Total</span>
+                                    <span class="text-lg font-bold text-gray-900">{{ number_format($ticket->time_spent_hours, 1) }} <span class="text-xs font-normal text-gray-500">hrs</span></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-8">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Observación Técnica Final</label>
-                            <textarea name="new_observation" rows="3" class="w-full border-gray-300 rounded-xl text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 placeholder-gray-400 py-3 px-4 transition-shadow focus:shadow-md" placeholder="Describe brevemente el trabajo realizado para finalizar..."></textarea>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Observación Técnica</label>
+                            <textarea name="execution_details" rows="3" class="w-full border-gray-300 rounded-xl text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 placeholder-gray-400 py-3 px-4" placeholder="Describe brevemente el trabajo realizado...">{{ old('execution_details', $ticket->execution_details) }}</textarea>
                         </div>
 
                         <hr class="mb-6 border-gray-100">
 
-                        <div class="space-y-4">
-                            <input type="hidden" name="job_done" value="1">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            
+                            <button type="submit" name="action" value="save" class="flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-3.5 px-6 rounded-xl hover:bg-gray-50 transition shadow-sm flex justify-center items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                                Guardar Avance
+                            </button>
 
-                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-3 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <button type="submit" name="action" value="finish" onclick="return confirm('¿Seguro que terminaste el trabajo? El ticket se cerrará.')" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Finalizar y Cerrar Ticket
                             </button>
-                            
-                            <p class="text-center text-xs text-gray-400 mt-2">
-                                Al hacer clic, el ticket se marcará como terminado y se notificará.
-                            </p>
                         </div>
 
                     </form>
@@ -196,10 +120,11 @@
 
     <script>
         let contadorMateriales = 1;
+        // Obtenemos los insumos desde PHP
         const opcionesInsumos = `
             <option value="">Seleccione...</option>
             @foreach($supplies as $supply)
-                <option value="{{ $supply->name }}" data-unit="{{ $supply->unit }}">{{ $supply->name }} ({{ $supply->unit }})</option>
+                <option value="{{ $supply->name }}" data-unit="{{ $supply->unit }}">{{ $supply->name }}</option>
             @endforeach
         `;
 
@@ -210,15 +135,15 @@
             
             nuevaFila.innerHTML = `
                 <div class="col-span-7">
-                    <select name="materials[${contadorMateriales}][name]" class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 py-1.5" onchange="actualizarUnidad(this)">
+                    <select name="new_materials[${contadorMateriales}][name]" class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-50 py-1.5" onchange="actualizarUnidad(this)" required>
                         ${opcionesInsumos}
                     </select>
                 </div>
                 <div class="col-span-3">
-                    <input type="number" name="materials[${contadorMateriales}][quantity]" step="0.1" placeholder="Cant." class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 text-center py-1.5">
+                    <input type="number" name="new_materials[${contadorMateriales}][quantity]" step="0.1" placeholder="Cant." class="w-full border-gray-200 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 text-center py-1.5" required>
                 </div>
                 <div class="col-span-2">
-                    <input type="text" name="materials[${contadorMateriales}][unit]" placeholder="Un." class="unidad-input w-full border-gray-200 rounded-md text-xs bg-gray-100 text-gray-500 text-center cursor-not-allowed py-1.5" readonly tabindex="-1">
+                    <input type="text" name="new_materials[${contadorMateriales}][unit]" placeholder="Un." class="unidad-input w-full border-gray-200 rounded-md text-xs bg-gray-100 text-gray-500 text-center cursor-not-allowed py-1.5" readonly tabindex="-1">
                 </div>
                 <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-100 text-red-500 rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-200 shadow-sm border border-red-200 text-xs font-bold transition-transform hover:scale-110">×</button>
             `;
@@ -229,10 +154,11 @@
 
         function actualizarUnidad(select) {
             const opcion = select.options[select.selectedIndex];
-            const unidad = opcion.getAttribute('data-unit');
+            const unidad = opcion.getAttribute('data-unit'); // Obtenemos la unidad del atributo data
             const fila = select.closest('.grid');
             const inputUnidad = fila.querySelector('.unidad-input');
-            if(inputUnidad) inputUnidad.value = unidad;
+            
+            if(inputUnidad) inputUnidad.value = unidad || ''; // Asignamos la unidad al input readonly
         }
     </script>
 

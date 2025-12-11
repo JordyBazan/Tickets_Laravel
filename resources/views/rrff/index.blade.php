@@ -19,7 +19,61 @@
                 </span>
             </div>
         </div>
+            <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <form action="{{ route('rrff.tickets.index') }}" method="GET">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                        
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Fecha</label>
+                            <input 
+                                type="date" 
+                                name="date" 
+                                value="{{ request('date') }}" 
+                                class="w-full rounded-lg border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            >
+                        </div>
 
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Estado</label>
+                            <select name="status_id" class="w-full rounded-lg border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Todos</option>
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}" {{ request('status_id') == $status->id ? 'selected' : '' }}>
+                                        {{ $status->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Prioridad</label>
+                            <select name="priority_id" class="w-full rounded-lg border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Todas</option>
+                                @foreach($priorities as $priority)
+                                    <option value="{{ $priority->id }}" {{ request('priority_id') == $priority->id ? 'selected' : '' }}>
+                                        {{ $priority->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2 flex gap-2">
+                            <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition shadow-md flex justify-center items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                Filtrar
+                            </button>
+                            
+                            @if(request()->anyFilled(['date_from', 'date_to', 'status_id', 'priority_id']))
+                                <a href="{{ route('rrff.tickets.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-3 rounded-lg text-sm transition flex justify-center items-center" title="Limpiar Filtros">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </a>
+                            @endif
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">

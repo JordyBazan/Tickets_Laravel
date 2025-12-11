@@ -9,6 +9,7 @@ class TicketMaterial extends Model
 {
     use HasFactory;
 
+    // 🚨 ESTO ES LO QUE NECESITAS PARA QUE SE GUARDEN LOS INSUMOS
     protected $fillable = [
         'ticket_id',
         'user_id',
@@ -17,7 +18,6 @@ class TicketMaterial extends Model
         'unit'
     ];
 
-    // Relación con el Ticket
     public function ticket()
     {
         return $this->belongsTo(Ticket::class);
